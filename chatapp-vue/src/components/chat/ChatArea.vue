@@ -59,13 +59,23 @@ onMounted(() => {
     cluster: "ap1",
   });
 
-  const channel = pusher.subscribe("my-channel");
-  channel.bind("my-event", (data: ChatMessage) => {
+  const channel = pusher.subscribe("vue-chat-app");
+  channel.bind("message", (data: ChatMessage) => {
     messages.value.push(data);
   });
 });
 
-const submit = () => {
-  console.log("pushed");
+const submit = async () => {
+  await fetch("https://localhost:8000/api/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: username.value,
+      message: message.value,
+    }),
+  });
+  message.value = "";
 };
 </script>
