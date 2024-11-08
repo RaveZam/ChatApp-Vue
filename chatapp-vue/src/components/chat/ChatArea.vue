@@ -10,11 +10,7 @@
       />
     </div>
     <div class="p-4 pr-8 mx-4 rounded-2xl text-right">
-      <div
-        class="bg-blue-500 p-4 rounded-2xl"
-        v-for="message in messages"
-        :key="messages"
-      >
+      <div class="bg-blue-500 p-4 m-4 rounded-2xl" v-for="message in messages">
         <h2 class="mr-4">{{ message.username }}</h2>
         <span class="text-white">{{ message.message }}</span>
       </div>
@@ -59,14 +55,14 @@ onMounted(() => {
     cluster: "ap1",
   });
 
-  const channel = pusher.subscribe("vue-chat-app");
+  const channel = pusher.subscribe("chat");
   channel.bind("message", (data: ChatMessage) => {
     messages.value.push(data);
   });
 });
 
 const submit = async () => {
-  await fetch("https://localhost:8000/api/messages", {
+  await fetch("http://localhost:8000/api/messages", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -76,6 +72,7 @@ const submit = async () => {
       message: message.value,
     }),
   });
+  console.log(messages);
   message.value = "";
 };
 </script>
